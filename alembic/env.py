@@ -8,6 +8,7 @@ from alembic import context
 from database import Base
 
 from auth.models import User, UserRole
+from tryout.models import Tryout, Module, Question, Option
 
 import os
 from dotenv import load_dotenv
