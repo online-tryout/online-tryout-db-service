@@ -9,6 +9,7 @@ from database import Base
 
 from auth.models import User, UserRole
 from tryout.models import Tryout, Module, Question, Option
+from payment.models import Transactions
 
 import os
 from dotenv import load_dotenv
