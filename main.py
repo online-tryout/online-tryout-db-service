@@ -7,6 +7,6 @@ app = FastAPI()
 app.include_router(auth_router, prefix="/api/db/auth")
 app.include_router(tryout_router, prefix="/api/db/tryout")
 
-@app.get("/api/auth/health")
+@app.get("/api/db/health")
 async def main():
     return {"message" : "Hello World"}
