@@ -3,7 +3,7 @@ from tryout import models, schemas
 from auth import crud
 
 import uuid
-from datetime import datetime
+from dateutil import parser
 
 def create_tryout(db: Session, tryout_params: schemas.CreateTryoutParams):
     try:
@@ -12,8 +12,8 @@ def create_tryout(db: Session, tryout_params: schemas.CreateTryoutParams):
             title=tryout_params.title,
             price=tryout_params.price,
             status=tryout_params.status,
-            started_at=datetime.fromisoformat(tryout_params.startedAt),
-            ended_at=datetime.fromisoformat(tryout_params.endedAt)
+            started_at=parser.isoparse(tryout_params.startedAt),
+            ended_at=parser.isoparse(tryout_params.endedAt)
         )
         db.add(tryout)
         db.commit()

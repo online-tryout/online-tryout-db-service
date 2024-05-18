@@ -5,7 +5,7 @@ from tryout import schemas, crud
 
 router = APIRouter()
 
-@router.post("/tryout")
+@router.post("")
 async def create_tryout(tryout_params: schemas.CreateTryoutParams, db: Session = Depends(get_db)):
     try:
         return crud.create_tryout(db, tryout_params)
