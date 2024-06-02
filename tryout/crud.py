@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 from tryout import models, schemas
+from sqlalchemy import desc
 from auth import crud
 
 import uuid
@@ -57,6 +58,51 @@ def create_tryout(db: Session, tryout_params: schemas.CreateTryoutParams):
     except Exception as e:
         db.rollback()
         raise ValueError(crud.handle_exception(e))
+
+def get_all_tryouts(db: Session):
+    tryouts = db.query(models.Tryout).order_by(desc(models.Tryout.updated_at)).all()
+    return [serialize_tryout(tryout) for tryout in tryouts]
+
+def serialize_tryout(tryout: models.Tryout) -> schemas.CreateTryoutParams:
+    return schemas.GetTryoutParams(
+        id=tryout.id,
+        title=tryout.title,
+        price=float(tryout.price),
+        status=tryout.status,
+        startedAt=tryout.started_at.isoformat(),
+        endedAt=tryout.ended_at.isoformat(),
+        modules=[
+            serialize_module(module) for module in tryout.modules
+        ]
+    )
+
+def serialize_module(module: models.Module):
+    return schemas.GetModuleParams(
+        id=module.id,
+        title=module.title,
+        moduleOrder=module.module_order,
+        questions=[
+            serialize_question(question) for question in module.questions
+        ]
+    )
+
+def serialize_question(question: models.Question):
+    return schemas.GetQuestionModuleParams(
+        id=question.id,
+        content=question.content,
+        questionOrder=question.question_order,
+        options=[
+            serialize_option(option) for option in question.options
+        ]
+    )
+
+def serialize_option(option: models.Option):
+    return schemas.GetOptionModuleParams(
+        id=option.id,
+        content=option.content,
+        isTrue=option.is_true,
+        optionOrder=option.option_order
+    )
 
 def get_tryout(db: Session, tryout_id: uuid.UUID):
     return db.query(models.Tryout).filter(models.Tryout.id == tryout_id).first()
