@@ -18,10 +18,34 @@ load_dotenv()
 router = APIRouter()
 
 @router.post("/register")
-async def register(user: schemas.UserCreate, token: Annotated[str | None, Cookie()] = None, db: Session = Depends(get_db)):
+async def register(response: Response, user: schemas.UserCreate, token: Annotated[str | None, Cookie()] = None, db: Session = Depends(get_db)):
     superadmins = os.environ["SUPERADMINS"]
     if user.email in superadmins:
-        return create_user(user, db)
+        create_user(user, db)
+        user = crud.get_user_by_email(db, user.email)
+        exp =  datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(days=1)
+    
+        payload_info = {
+            "id": str(user.id),
+            "name": str(user.name),
+            "role_id": user.role_id,
+            "exp": exp
+        }
+
+        token = utils.jwt_encrypt(payload_info)
+
+        response.set_cookie(key = "token", value = token)
+        
+        user_info = {
+            "avatar": user.avatar,
+            "createdAt": user.created_at,
+            "email": user.email,
+            "id": user.id,
+            "name": user.name,
+            "updatedAt": user.updated_at
+        }
+        
+        return {"user": user_info, "accessToken": token, "message": "register successful"}
 
     role = crud.get_user_role_by_id(db, user.role_id)
     if (role.type == "Admin") and not token:
@@ -37,8 +61,32 @@ async def register(user: schemas.UserCreate, token: Annotated[str | None, Cookie
         role = crud.get_user_role_by_id(db, user_role_id)
         if role.type != "Admin":
             raise HTTPException(status_code=403, detail="unauthorized")
+        
+    create_user(user, db)
+    user = crud.get_user_by_email(db, user.email)
+    exp =  datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(days=1)
 
-    return create_user(user, db)
+    payload_info = {
+        "id": str(user.id),
+        "name": str(user.name),
+        "role_id": user.role_id,
+        "exp": exp
+    }
+
+    token = utils.jwt_encrypt(payload_info)
+
+    response.set_cookie(key = "token", value = token)
+    
+    user_info = {
+        "avatar": user.avatar,
+        "createdAt": user.created_at,
+        "email": user.email,
+        "id": user.id,
+        "name": user.name,
+        "updatedAt": user.updated_at
+    }
+    
+    return {"user": user_info, "accessToken": token, "message": "register successful"}
     
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     encoded_password = user.password
