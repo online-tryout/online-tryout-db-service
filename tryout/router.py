@@ -19,3 +19,13 @@ def get_tryouts(db: Session = Depends(get_db)):
         return schemas.TryoutResponse(tryouts=tryouts, message="Tryouts fetched successfully")
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+@router.get("/{tryout_id}")
+def get_tryout(tryout_id: str, db: Session = Depends(get_db)):
+    try:
+        tryout = crud.get_tryout(db, tryout_id)
+        if tryout is None:
+            raise HTTPException(status_code=404, detail="Tryout not found")
+        return tryout
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
