@@ -18,8 +18,9 @@ load_dotenv()
 router = APIRouter()
 
 @router.post("/register")
-async def register(response: Response, user: schemas.UserCreate, token: Annotated[str | None, Cookie()] = None, db: Session = Depends(get_db)):
+async def register(response: Response, user: schemas.UserCreate, db: Session = Depends(get_db)):
     superadmins = os.environ["SUPERADMINS"]
+    token = user.token
     if user.email in superadmins:
         create_user(user, db)
         user = crud.get_user_by_email(db, user.email)

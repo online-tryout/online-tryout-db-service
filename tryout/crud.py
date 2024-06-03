@@ -106,3 +106,6 @@ def serialize_option(option: models.Option):
 
 def get_tryout(db: Session, tryout_id: uuid.UUID):
     return db.query(models.Tryout).filter(models.Tryout.id == tryout_id).first()
+
+def get_module_by_id(db: Session, id: uuid.UUID):
+    return db.query(models.Module).filter(models.Module.id == id).first()

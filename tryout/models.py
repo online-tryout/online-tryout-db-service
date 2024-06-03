@@ -19,6 +19,16 @@ class Tryout(Base):
 
     modules = relationship("Module", backref="tryout", cascade="all, delete")
 
+class TryoutInstance(Base):
+    __tablename__ = "tryoutinstance"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    tryout_id = Column(UUID(as_uuid=True), ForeignKey("tryout.id", ondelete="CASCADE"), nullable=False)
+    user_id = Column(UUID(as_uuid=True), ForeignKey("user.id", ondelete="CASCADE"), nullable=False)
+    status = Column(String, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
+
 class Module(Base):
     __tablename__ = "module"
 
@@ -30,6 +40,15 @@ class Module(Base):
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
 
     questions = relationship("Question", backref="module", cascade="all, delete")
+
+class ModuleInstance(Base):
+    __tablename__ = "moduleinstance"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    module_id = Column(UUID(as_uuid=True), ForeignKey("module.id", ondelete="CASCADE"), nullable=False)
+    tryout_instance_id = Column(UUID(as_uuid=True), ForeignKey("tryoutinstance.id", ondelete="CASCADE"), nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
 
 class Question(Base):
     __tablename__ = "question"
@@ -51,5 +70,15 @@ class Option(Base):
     question_id = Column(UUID(as_uuid=True), ForeignKey("question.id", ondelete="CASCADE"), nullable=False)
     is_true = Column(Boolean, nullable=False, default=False)
     option_order = Column(Integer)
+    created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
+
+class Answer(Base):
+    __tablename__ = "answer"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    question_id = Column(UUID(as_uuid=True), ForeignKey("question.id", ondelete="CASCADE"), nullable=False)
+    option_id = Column(UUID(as_uuid=True), ForeignKey("option.id", ondelete="CASCADE"), nullable=False)
+    module_instance_id = Column(UUID(as_uuid=True), ForeignKey("moduleinstance.id", ondelete="CASCADE"), nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)

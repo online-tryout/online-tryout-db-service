@@ -8,7 +8,7 @@ from alembic import context
 from database import Base
 
 from auth.models import User, UserRole
-from tryout.models import Tryout, Module, Question, Option
+from tryout.models import Tryout, Module, Question, Option, TryoutInstance, ModuleInstance, Answer
 from payment.models import Transactions
 
 import os
