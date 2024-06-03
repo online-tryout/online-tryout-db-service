@@ -1,10 +1,11 @@
 from datetime import datetime
+import uuid
 from pydantic import BaseModel
 
 
 class TransactionBase(BaseModel):
-    tryoutId: int
-    userId: int
+    tryout_id: uuid.UUID
+    user_id: uuid.UUID
     amount: float
     status: str
 
@@ -12,9 +13,9 @@ class TransactionCreate(TransactionBase):
     pass
 
 class Transaction(TransactionBase):
-    id: int
-    createdAt: datetime
-    updatedAt: datetime
+    id: uuid.UUID
+    created_at: datetime
+    updated_at: datetime
 
     class Config:
         from_attributes = True

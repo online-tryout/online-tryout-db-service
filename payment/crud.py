@@ -1,4 +1,5 @@
 import uuid
+from sqlalchemy import desc
 from sqlalchemy.orm import Session
 
 from . import models, schema
@@ -9,15 +10,15 @@ def get_transaction(db: Session, transaction_id: uuid.UUID):
 
 
 def get_transactions(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.Transactions).offset(skip).limit(limit).all()
+    return db.query(models.Transactions).order_by(desc(models.Transactions.created_at)).offset(skip).limit(limit).all()
 
 
 def get_transactions_by_user(db: Session, user_id: uuid.UUID, skip: int = 0, limit: int = 100):
-    return db.query(models.Transactions).filter(models.Transactions.userId == user_id).offset(skip).limit(limit).all()
+    return db.query(models.Transactions).filter(models.Transactions.userId == user_id).order_by(desc(models.Transactions.created_at)).offset(skip).limit(limit).all()
 
 
 def get_transactions_by_tryout(db: Session, tryout_id: uuid.UUID, skip: int = 0, limit: int = 100):
-    return db.query(models.Transactions).filter(models.Transactions.tryoutId == tryout_id).offset(skip).limit(limit).all()
+    return db.query(models.Transactions).filter(models.Transactions.tryoutId == tryout_id).order_by(desc(models.Transactions.created_at)).offset(skip).limit(limit).all()
 
 
 def create_transaction(db: Session, transaction: schema.TransactionCreate):
@@ -35,4 +36,3 @@ def update_transaction(db: Session, transaction_id: uuid.UUID, updated_transacti
     db.commit()
     db.refresh(transaction)
     return transaction
-
