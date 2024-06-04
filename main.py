@@ -3,7 +3,7 @@ from auth.router import router as auth_router
 from tryout.router import router as tryout_router
 from payment.router import router as payment_router
 
-app = FastAPI(docs_url="/api/db/docs"))
+app = FastAPI(docs_url="/api/db/docs")
 
 app.include_router(auth_router, prefix="/api/db/auth")
 app.include_router(tryout_router, prefix="/api/db/tryout")
