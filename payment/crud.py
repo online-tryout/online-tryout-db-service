@@ -14,11 +14,11 @@ def get_transactions(db: Session, skip: int = 0, limit: int = 100):
 
 
 def get_transactions_by_user(db: Session, user_id: uuid.UUID, skip: int = 0, limit: int = 100):
-    return db.query(models.Transactions).filter(models.Transactions.userId == user_id).order_by(desc(models.Transactions.created_at)).offset(skip).limit(limit).all()
+    return db.query(models.Transactions).filter(models.Transactions.user_id == user_id).order_by(desc(models.Transactions.created_at)).offset(skip).limit(limit).all()
 
 
 def get_transactions_by_tryout(db: Session, tryout_id: uuid.UUID, skip: int = 0, limit: int = 100):
-    return db.query(models.Transactions).filter(models.Transactions.tryoutId == tryout_id).order_by(desc(models.Transactions.created_at)).offset(skip).limit(limit).all()
+    return db.query(models.Transactions).filter(models.Transactions.tryout_id == tryout_id).order_by(desc(models.Transactions.created_at)).offset(skip).limit(limit).all()
 
 
 def create_transaction(db: Session, transaction: schema.TransactionCreate):
