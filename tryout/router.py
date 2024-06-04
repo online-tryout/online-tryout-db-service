@@ -29,3 +29,13 @@ def get_tryout(tryout_id: str, db: Session = Depends(get_db)):
         return tryout
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+@router.get("/modules/{module_id}")
+def get_module(module_id: str, db: Session = Depends(get_db)):
+    try:
+        module = crud.get_module_by_id(db, module_id)
+        if module:
+            return module
+        raise HTTPException(status_code=404, detail="module not found")
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
