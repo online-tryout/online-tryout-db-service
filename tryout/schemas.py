@@ -5,43 +5,43 @@ import uuid
 
 class OptionModuleParams(BaseModel):
     content: str
-    isTrue: bool
-    optionOrder: int
+    is_true: bool
+    option_order: int
 
 class QuestionModuleParams(BaseModel):
     content: str
-    questionOrder: int
+    question_order: int
     options: List[OptionModuleParams]
 
 class CreateModuleParams(BaseModel):
     title: str
-    moduleOrder: int
+    module_order: int
     questions: List[QuestionModuleParams]
 
 class CreateTryoutParams(BaseModel):
     title: str
     price: float
     status: str
-    startedAt: str
-    endedAt: str
+    started_at: str
+    ended_at: str
     modules: List[CreateModuleParams]
     
 class GetOptionModuleParams(BaseModel):
     id: uuid.UUID
     content: str
-    isTrue: bool
-    optionOrder: int
+    is_true: bool
+    option_order: int
 
 class GetQuestionModuleParams(BaseModel):
     id: uuid.UUID
     content: str
-    questionOrder: int
+    question_order: int
     options: List[GetOptionModuleParams]
 
 class GetModuleParams(BaseModel):
     id: uuid.UUID
     title: str
-    moduleOrder: int
+    module_order: int
     questions: List[GetQuestionModuleParams]
 
 class GetTryoutParams(BaseModel):
@@ -49,8 +49,8 @@ class GetTryoutParams(BaseModel):
     title: str
     price: float
     status: str
-    startedAt: str
-    endedAt: str
+    started_at: str
+    ended_at: str
     modules: List[GetModuleParams]
     
 class TryoutResponse(BaseModel):

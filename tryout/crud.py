@@ -69,8 +69,8 @@ def serialize_tryout(tryout: models.Tryout) -> schemas.CreateTryoutParams:
         title=tryout.title,
         price=float(tryout.price),
         status=tryout.status,
-        startedAt=tryout.started_at.isoformat(),
-        endedAt=tryout.ended_at.isoformat(),
+        started_at=tryout.started_at.isoformat(),
+        ended_at=tryout.ended_at.isoformat(),
         modules=[
             serialize_module(module) for module in tryout.modules
         ]
@@ -80,7 +80,7 @@ def serialize_module(module: models.Module):
     return schemas.GetModuleParams(
         id=module.id,
         title=module.title,
-        moduleOrder=module.module_order,
+        module_order=module.module_order,
         questions=[
             serialize_question(question) for question in module.questions
         ]
@@ -90,7 +90,7 @@ def serialize_question(question: models.Question):
     return schemas.GetQuestionModuleParams(
         id=question.id,
         content=question.content,
-        questionOrder=question.question_order,
+        question_order=question.question_order,
         options=[
             serialize_option(option) for option in question.options
         ]
@@ -100,12 +100,14 @@ def serialize_option(option: models.Option):
     return schemas.GetOptionModuleParams(
         id=option.id,
         content=option.content,
-        isTrue=option.is_true,
-        optionOrder=option.option_order
+        is_true=option.is_true,
+        option_order=option.option_order
     )
 
 def get_tryout(db: Session, tryout_id: uuid.UUID):
-    return db.query(models.Tryout).filter(models.Tryout.id == tryout_id).first()
+    tryout = db.query(models.Tryout).filter(models.Tryout.id == tryout_id).first()
+    return serialize_tryout(tryout)
 
 def get_module_by_id(db: Session, id: uuid.UUID):
-    return db.query(models.Module).filter(models.Module.id == id).first()
+    module = db.query(models.Module).filter(models.Module.id == id).first()
+    return serialize_module(module=module)

@@ -16,7 +16,7 @@ async def create_tryout(tryout_params: schemas.CreateTryoutParams, db: Session =
 def get_tryouts(db: Session = Depends(get_db)):
     try:
         tryouts = crud.get_all_tryouts(db)
-        return schemas.TryoutResponse(tryouts=tryouts, message="Tryouts fetched successfully")
+        return tryouts
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     
